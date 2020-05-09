@@ -66,7 +66,7 @@ var port = process.argv[2] || process.env.PORT
 if (port) {
   server.listen(port)
 } else {
-  getPort({ port: 3000 }).then(function (port) {
+  getPort({ port: 5678 }).then(function (port) {
     server.listen(port)
   })
 }

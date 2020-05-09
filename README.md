@@ -11,6 +11,11 @@ terminates the TCP connection 2 seconds after the first data packet.
 [![Build status](https://travis-ci.org/watson/http-echo-server.svg?branch=master)](https://travis-ci.org/watson/http-echo-server)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
+This is a fork frok [watson http-echo-server](https://github.com/watson/http-echo-server.git)
+
+With slight modification to docker alpine and multi-arch amd64, arm64, armv7
+The default listening port is 5678. Change it with -e PORT=<port number>
+
 ## Installation
 
 To setup a simple echo-server on Heroku just click this button:

@@ -1,6 +1,26 @@
-language: node_js
-node_js:
-- '10'
-- '9'
-- '8'
-- '6'
+sudo: required
+services:
+- docker
+language: shell
+dist: bionic
+arch:
+- amd64
+- arm64
+os: linux
+env:
+  global:
+  - TRAVIS_SECURE_ENV_VARS=true
+  - DOCKER_PLATFORMS='linux/amd64 linux/arm64 linux/arm/v7'
+  - TAGS='latest'
+  - secure: P4p39HWU5Om484q71crKkp1iAUrhMTZ5d0aFJgdLCuF1pv6LfWNwCE0dr7l7ZZW+sL4fnNKUWKn/It7xoCapSCMGsUXvSFOOxb5lIpPNGT4GI5qvcVq5aRpC9k33rr9cp3+Z46Or7LHhExgbj1Rc+Uz5Gd+K/bkysi0/ezaCFZgFaZLxjnQJt+/VAAoFuUqpia8Z7GUvey6wTIE7y/MLGJpG9Hj8e6i0sBOzCvNN+SrhR3gIV0JhZOSBrZRGZJA0rQAZ4v9rnzmboeuJthgfoYTC0wEeysVWBQG8iVNbm19EDCKEx4Z7UurEtun9t6kQYMt+93W2lrtYa4Wd4jbaCqRZKK0K9QhRtgHsEleIS3n20+NjB9jCVNwBFYOuCugm2x8ypM3Hz8a172EH074N4sbzFjpsWXdH8JAn348F8amVYXU7vATzZ6ZPf738iNu7JxmVjF0aeKk5Qs2PCqsCZaLy8NM4cvnthyEJWFM9pgWn4VfIXQClWM5j+N6bKrohw9ME/hcrhuYsKiT6BRf8WuDxq8arpaHyi3Z6nzu51p/btN3BcDg4C2/sgHTygJHw9MXs5FfzHn3gVWt7siwDWhUjtgYAJ0qtZHZLHsMFioiZwM+ZBlCzm2Qmm8BmFsBKOiswOtAio4yj63IXj95RLI+OvuaWHpSN6AB9/Cw8iPw=
+  - secure: IH2IrEhPqOVHCia/tmQISkWswTy2B8KkVZjR7A+rvJ5qcza2efaTElUur53Gz32oS1P2wHVHMHSo20ixfNSX4VBRu/vEve17fHZfTqiFCgDNEALqgLy5gaj03lTr2wtNrOR3y6NFJo4+2mnAbpCh70PH5IeyqD0rFlpOD3FkzhBE28/5fQHpt2cZ2tyA30pl0zY9ckeu5j2V3R5prz82kRvrnz7VoS8WytkGU0brwJHRUkitTdSznfaf3mFQC7pGD0aVQLGTr6qF3NQdnvJo1zwkV2u9rNwdL0D8nQZLMe7nNNesiJpdGKszt+5gdR3y/9BDYSrItf7aYre+emEQbDlri4ASh+XV1X4dQnwzFQBE07+3wlfIg4REj032BptxguOfuvJhQ9y0AjoV2QrvuYhBCyaMerM8UZjeX96VcWNAl9EPGDFLu11leR2cKTQMY4ZsyPWq/7EGWEWvBWyTHeQjNrRWYj5MT9QHkwvYUIg6TtwlmGQBiY2i3byXzKUh9/0RxyITmCjTiWzGxEeAXUnL5gCBzFZo5I5b1Q5dLqT60046MUiN5i13yVxWfMDQuvlUp57QwX0HoJlOzYwmHaJbVRehqaxtx3Q5GYhjlxLA9zoDxbqLG143FumsNmNndXjpWwG/33qtT2Ml2qsQPretc9jlAwgZKRQvWNivRKA=
+  - secure: Icf+a0THx789jyMDfSYbuSSf5Y6TWJqmT5rfSkoOfcH6F7z8JYqq4J8UQYnR7LylvAayLUOOw5j4Z8qWU48w5cXkxijeoy8VGHyZ9s9dFl+pTlVEaQmN1lXp6U8pD2VI3H7Cxgxdp/O2DwPAHF3EnaUbdV7XJFFtU8lRoV793ieaHftpdFEtbCNa7H/oiwXFu5mHTOInehhsai+Qx78Q06WKbPJCAg8/bfiKYmJjP+nJCYxUFQo28h/4fMnA9pC3U0lVVMEOIVxeW6mBEv66LMXAkghkzxPDVO2pD8C9Owybbpc/RNE6Glpu5lJrAfuujbSF+++KnhnLTEmqB2RFoXhnWXqjslv4Utx8v9kIFcAsCVdfJT/h7HaHgQ3ziQyPUGUqtithEQWEWFzVMVaSSd2QjgPm35i7sK5ew6KTbTiT+AEiaObn0RtJl87YXxA4lqRWbaaMpX6x/OevaySILj+0lJvlfkEwfgTEvrEGHFkzOFy1+xBFgIN4bTjYpTpejO2mNXff+LX2Xf7Q5v83E96WVrB1pmbpNinFuKZzhc5IJoW2UgK8xBdw3M1FSlDM5WS/Qr3OwYnW65b0GFb3FO84CXFmReXuG8bH5xf5Wa71K1MVwfFhGVL2oPXbdIkq/UpLfh8AxxD49SpTR24rubAojpzqpIq0IIe35rBgAsg=
+jobs:
+  fast_finish: true
+  include:
+  - stage: Deploy docker image
+    script:
+    - source ./buildx_ci_images.sh
+    - set -ex; setup_ci_environment::main; set +x
+    - while sleep 300; do echo "still alive"; done &
+    - set -ex; build_ci_images::main; set +x
